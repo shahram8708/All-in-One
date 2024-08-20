@@ -3,7 +3,6 @@ google-generativeai
 markdown
 PyPDF2
 flask-cors
-base64
 logging
 tempfile
 youtube-transcript-api
