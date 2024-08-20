@@ -1,1 +1,14 @@
-ÿþ
+Flask
+google-generativeai
+markdown
+PyPDF2
+flask-cors
+base64
+logging
+tempfile
+youtube-transcript-api
+fpdf
+markdown2
+requests
+gunicorn
+flask-cors
