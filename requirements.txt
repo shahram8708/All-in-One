@@ -4,7 +4,6 @@ markdown
 PyPDF2
 flask-cors
 logging
-tempfile
 youtube-transcript-api
 fpdf
 markdown2
