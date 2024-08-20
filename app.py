@@ -30,6 +30,10 @@ chat = model.start_chat(history=[])
 def index():
     return render_template('index.html')
 
+@app.route('/code', methods=['GET', 'POST'])
+def code():
+    return render_template('code.html')
+
 @app.route('/brieflypdf', methods=['GET', 'POST'])
 def brieflypdf():
     return render_template('brieflypdf.html')
