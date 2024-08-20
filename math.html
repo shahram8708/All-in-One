@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathGenius AI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to bottom right, #1e3c72, #2a5298, #1e3c72, #2c3e50, #1e3c72);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            color: white;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: linear-gradient(45deg, #3498db, #9b59b6, #e74c3c, #f1c40f, #2ecc71);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to top right, #ff6e7f, #bfe9ff, #ff6e7f, #f7bb97, #ff6e7f);
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            padding: 40px;
+            background: linear-gradient(45deg, #3498db, #9b59b6, #e74c3c, #f1c40f, #2ecc71);
+            border-radius: 20px;
+            box-shadow: 0 0 20px #34A853;
+            overflow: hidden;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        h1 {
+            color: #9b59b6;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 36px;
+        }
+
+        p {
+            color: white;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .file-drop-area {
+            position: relative;
+            width: calc(100% - 40px);
+            margin: 10px auto;
+            padding: 20px;
+            border: 2px dashed #34A853;
+            border-radius: 5px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .file-drop-area.is-active {
+            background-color: #e6f7ff;
+        }
+
+        .file-drop-area input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-drop-area:hover {
+            border-color: #34A853;
+            box-shadow: 0 0 20px #34A853;
+            outline: none;
+            background: radial-gradient(circle, #ff7e5f, #feb47b, #ff7e5f, #765285, #333333);
+        }
+
+        .file-message {
+            font-size: 16px;
+            color: white;
+        }
+
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #00bf8f, #001510, #00acc1, #0078ff, #ff0080);
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px #34A853;
+            scroll-behavior: smooth;
+        }
+
+        #result p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+            color: white;
+        }
+
+        .emoji {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 40px;
+            z-index: 2;
+        }
+
+        #result::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        #result::-webkit-scrollbar-track {
+            background: linear-gradient(to right, #4b6cb7, #182848, #6b6b83, #3b4371, #2c3e50);
+        }
+
+        #result::-webkit-scrollbar-thumb {
+            background: linear-gradient(to top left, #ff7e5f, #feb47b, #ff7e5f, #f5d020, #ff7e5f);
+            border-radius: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        #howToUseButton:hover {
+            background: linear-gradient(to right, #4b6cb7, #182848, #6b6b83, #3b4371, #2c3e50);
+            color: #fff;
+        }
+
+        #howToUseButton {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: conic-gradient(#f6d365, #fda085, #f6d365, #84fab0, #8fd3f4);
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        #stopAudioButton:hover {
+            background: linear-gradient(to right, #2c3e50, #4ca1af, #2c3e50, #192f6a, #283048);
+            color: #fff;
+        }
+
+        #stopAudioButton {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(to bottom, #a18cd1, #fbc2eb, #fecfef, #f8ceec, #fbc2eb);
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(to top, #0b486b, #f56217, #f1e767, #f56217, #0b486b);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .MathJax {
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .button-container button:hover {
+            background: linear-gradient(to bottom right, #6a3093, #a044ff, #6a3093, #89216b, #a044ff);
+            color: #fff;
+        }
+
+        p {
+            color: white;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        ol {
+            list-style-type: decimal;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        ol li {
+            list-style: none;
+        }
+
+        ol li:before {
+            content: "";
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(to left, #56ab2f, #a8e063, #56ab2f, #16a085, #00cdac);
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome to MathGenius AI</h1>
+        <p>This website is designed specifically for students and individuals seeking solutions to their math problems.
+            Our platform leverages advanced AI to provide clear and detailed explanations for your math queries.</p>
+        <p>Once you've uploaded an image of your math problem, our AI system will analyze and provide you with a
+            step-by-step solution, making it easier for you to understand and solve complex math equations.</p>
+        <div class="file-drop-area" id="fileDropArea">
+            <span class="file-message">Drag & Drop your image here</span>
+            <input type="file" id="imageInput" accept="image/*" required>
+        </div>
+        <div id="result"></div>
+        <p>How to use:</p>
+        <ol>
+            <li>Use a screen reader to navigate the website if necessary.</li>
+            <li>Activate the file upload button to upload an image of your math problem.</li>
+            <li>Wait for the detailed solution to appear, which will be displayed shortly after uploading.</li>
+            <li>Use your screen reader to explore and comprehend the provided solution.</li>
+            <li>Click on the "How to Use" button for comprehensive instructions on navigating the website.</li>
+        </ol>
+
+        <p>For visually impaired users, audio explanations are also available:</p>
+        <ol>
+            <li>Listen to the audio explanation of the uploaded math problem by clicking the "Play Audio" button.</li>
+            <li>Ensure clarity by using headphones or speakers for optimal audio quality.</li>
+            <li>Explore the content further with detailed audio explanations, providing additional context and insights.
+            </li>
+        </ol>
+
+        <p>Experience the power of AI, as our platform leverages cutting-edge technology to provide you with clear and
+            detailed math solutions.</p>
+        <button id="howToUseButton">How to Use</button>
+        <button id="stopAudioButton">Stop Audio</button>
+    </div>
+    <script>
+        var fileInput = document.getElementById('imageInput');
+        var fileDropArea = document.getElementById('fileDropArea');
+        var fileMessage = fileDropArea.querySelector('.file-message');
+        var resultDiv = document.getElementById('result');
+        var speechSynthesisUtterance = null;
+
+        fileInput.addEventListener('click', function () {
+            speak("You have clicked the image upload input. Please select an image of your math problem to upload.");
+        });
+
+        fileInput.addEventListener('change', function () {
+            var file = fileInput.files[0];
+            if (file) {
+                speak(`You have selected the image: ${file.name}. Now, please wait while we process the image for your math problem.`);
+                generateContent();
+            } else {
+                speak("No file selected. Please select an image of your math problem to upload.");
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('stopAudioButton').style.display = 'none';
+        });
+
+        function speak(text) {
+            if (speechSynthesisUtterance) {
+                window.speechSynthesis.cancel();
+            }
+            speechSynthesisUtterance = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(speechSynthesisUtterance);
+
+            document.getElementById('stopAudioButton').style.display = 'block';
+
+            speechSynthesisUtterance.onend = function () {
+                document.getElementById('stopAudioButton').style.display = 'none';
+            };
+        }
+
+        document.getElementById('stopAudioButton').addEventListener('click', function () {
+            window.speechSynthesis.cancel();
+            speechSynthesisUtterance = null;
+            this.style.display = 'none';
+        });
+
+
+        function generateContent() {
+            resultDiv.innerHTML = '<p>Please wait, processing...</p>';
+
+            var file = fileInput.files[0];
+            if (!file) {
+                alert("Please select an image.");
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                var imageBase64 = reader.result.split(',')[1];
+
+                var payload = {
+                    "contents": [{
+                        "parts": [{
+                            "text": "Please provide a detailed solution for this math problem."
+                        }, {
+                            "inlineData": {
+                                "mimeType": "image/jpeg",
+                                "data": imageBase64
+                            }
+                        }]
+                    }]
+                };
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "https://all-in-one-zytf.onrender.com/generatecontent", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            var response = JSON.parse(xhr.responseText);
+                            var formattedMessage = response.generated_content.replace(/(?:\r\n|\r|\n)/g, '<br>');
+                            formattedMessage = formattedMessage.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+
+                            resultDiv.innerHTML = `<p>Clear Explanation:</p><p id="textContent">${formattedMessage}</p>`;
+                            MathJax.typeset();
+                            speak("The result is ready. Here is the solution to your math problem. " + response.generated_content);
+                            addButtons();
+                        } else {
+                            resultDiv.innerHTML = "<p>Error: " + xhr.statusText + "</p>";
+                            speak("There was an error processing the image.");
+                        }
+                    }
+                };
+
+                xhr.send(JSON.stringify(payload));
+            };
+        }
+
+
+        function addButtons() {
+            const copyButton = document.createElement('button');
+            copyButton.innerText = 'Copy Text';
+            copyButton.onclick = function () {
+                const textToCopy = document.getElementById('textContent').innerText;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    alert('Text copied to clipboard!');
+                });
+            };
+
+            const audioButton = document.createElement('button');
+            audioButton.innerText = 'Play Audio';
+            audioButton.onclick = function () {
+                const textToSpeak = document.getElementById('textContent').innerText;
+                speak(textToSpeak);
+            };
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('button-container');
+            buttonContainer.appendChild(copyButton);
+            buttonContainer.appendChild(audioButton);
+
+            resultDiv.appendChild(buttonContainer);
+        }
+
+        document.getElementById('howToUseButton').addEventListener('click', function () {
+            const instructions = [
+                "Welcome to MathGenius AI.",
+                "This website is designed to help you with your math problems.",
+                "To use this website:",
+                "1. Use a screen reader to navigate the website if necessary.",
+                "2. Upload an image of your math problem by activating the file upload button.",
+                "3. Wait for the detailed solution to appear after uploading.",
+                "4. Explore the solution using your screen reader.",
+                "5. Click on the 'How to Use' button to hear instructions on navigating the website.",
+                "For visually impaired users, audio explanations are also available:",
+                "1. Listen to the audio explanation of the uploaded math problem by clicking the 'Play Audio' button.",
+                "2. Use headphones or speakers to hear the explanation clearly.",
+                "3. Explore the content further with detailed audio explanations, providing additional context and insights."
+            ];
+
+            speak(instructions.join(" "));
+        });
+
+        window.onbeforeunload = function () {
+            return "Are you sure you want to reload the page? Any unsaved changes will be lost.";
+        };
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Doubt Clear</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 40px;
+            margin: 20px 0;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        h1 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 36px;
+        }
+
+        p {
+            color: #333;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        input[type="file"],
+        textarea {
+            display: block;
+            width: calc(100% - 40px);
+            margin: 10px auto;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            display: block;
+            width: calc(100% - 40px);
+            margin: 20px auto;
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        #result p {
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.6;
+            color: #333;
+            max-height: 100%;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        .wave-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .wave-loader div {
+            width: 1em;
+            height: 1em;
+            background-color: #007bff;
+            border-radius: 100%;
+            animation: wave 1.5s infinite ease-in-out;
+            display: inline-block;
+            margin: 0 0.2em;
+        }
+
+        .wave-loader div:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .wave-loader div:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>💡 AI Doubt Clear</h1>
+        <p>Clear your doubts effortlessly by uploading an image and entering your doubt below.</p>
+        <input type="file" id="imageInput" accept="image/*" required>
+        <textarea id="textInput" placeholder="Enter your doubt..." required></textarea>
+        <button onclick="generateContent()">Clear Doubt</button>
+        <div class="wave-loader" id="waveLoader">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="result">
+            <p id="responseText"></p>
+        </div>
+        <button id="copyButton" class="hidden" onclick="copyToClipboard()">Copy</button>
+        <button id="playButton" class="hidden" onclick="playAudio()">Play</button>
+        <button id="stopButton" class="hidden" onclick="stopAudio()">Stop</button>
+    </div>
+    <script>
+        var synth = window.speechSynthesis;
+        var currentUtterance = null;
+
+        function generateContent() {
+            var fileInput = document.getElementById('imageInput');
+            var textInput = document.getElementById('textInput');
+            var resultDiv = document.getElementById('result');
+            var waveLoader = document.getElementById('waveLoader');
+            var responseText = document.getElementById('responseText');
+            var copyButton = document.getElementById('copyButton');
+            var playButton = document.getElementById('playButton');
+            var stopButton = document.getElementById('stopButton');
+
+            var file = fileInput.files[0];
+            var text = textInput.value;
+
+            if (!file || !text) {
+                alert("Please select an image and enter your doubt.");
+                return;
+            }
+
+            waveLoader.style.display = 'block';
+
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function () {
+                var imageBase64 = reader.result.split(',')[1];
+
+                var payload = {
+                    "contents": [{
+                        "parts": [{
+                            "text": text
+                        }, {
+                            "inlineData": {
+                                "mimeType": "image/jpeg",
+                                "data": imageBase64
+                            }
+                        }]
+                    }]
+                };
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "https://all-in-one-zytf.onrender.com/generate_content", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        waveLoader.style.display = 'none';
+                        if (xhr.status === 200) {
+                            var response = JSON.parse(xhr.responseText);
+                            responseText.innerHTML = response.generated_content;
+                            resultDiv.style.display = 'block';
+                            copyButton.classList.remove('hidden');
+                            playButton.classList.remove('hidden');
+                            stopButton.classList.remove('hidden');
+                        } else {
+                            resultDiv.innerHTML = '<p>Error generating content. Please try again.</p>';
+                            resultDiv.style.display = 'block';
+                        }
+                    }
+                };
+
+                xhr.send(JSON.stringify(payload));
+            };
+        }
+
+        function copyToClipboard() {
+            var responseText = document.getElementById('responseText');
+            var range = document.createRange();
+            range.selectNode(responseText);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+        }
+
+        function playAudio() {
+            var responseText = document.getElementById('responseText').innerText;
+            var utterance = new SpeechSynthesisUtterance(responseText);
+            synth.speak(utterance);
+            currentUtterance = utterance;
+        }
+
+        function stopAudio() {
+            if (currentUtterance) {
+                synth.cancel();
+                currentUtterance = null;
+            }
+        }
+    </script>
+</body>
+
+</html>

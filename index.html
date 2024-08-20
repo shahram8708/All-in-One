@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All-in-One Education Tool 🚀🎓</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #6dd5fa, #2980b9);
+            color: #fff;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            padding: 0 0 10px 0;
+            font-size: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        header h1::before {
+            content: "🚀";
+            margin-right: 1rem;
+            font-size: 3rem;
+            animation: bounce 2s infinite;
+        }
+
+        header h1::after {
+            content: "🎓";
+            margin-left: 1rem;
+            font-size: 3rem;
+            animation: bounce 2s infinite;
+            animation-delay: 1s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-20px);
+            }
+
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .nav-toggle {
+            display: none;
+            background: #2980b9;
+            color: #fff;
+            border: none;
+            padding: 1rem;
+            cursor: pointer;
+            font-size: 1.5rem;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.5s ease;
+        }
+
+        nav ul li {
+            margin: 0.5rem 1rem;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        nav ul li:hover {
+            transform: scale(1.1);
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            background: #2980b9;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background: #f39c12;
+            color: #fff;
+        }
+
+        nav ul li a::before {
+            margin-right: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        main {
+            padding: 3rem 2rem;
+            text-align: center;
+            background: #ecf0f1;
+        }
+
+        .intro {
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            font-size: 1.3rem;
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .intro:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: calc(30% - 2rem);
+            box-sizing: border-box;
+            text-align: left;
+            transition: transform 0.3s ease-in-out;
+            position: relative;
+        }
+
+        .feature::after {
+            content: "⭐";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 2rem;
+            color: #f39c12;
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .feature:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature h3 {
+            margin-top: 0;
+            font-size: 2rem;
+            color: #2980b9;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature h3::before {
+            content: "⚡";
+            margin-right: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .feature p {
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        footer {
+            padding: 1.5rem;
+            text-align: center;
+            background: #3498db;
+            color: #fff;
+            font-size: 1rem;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 822px) {
+            .feature {
+                width: calc(50% - 2rem);
+            }
+
+            .nav-toggle {
+                display: block;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                left: 0;
+                background: #3498db;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+                z-index: 9;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                margin: 0;
+                border-bottom: 1px solid #4b79a1;
+                width: 100%;
+            }
+
+            nav ul li a {
+                display: block;
+                text-align: center;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .feature {
+                width: 100%;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .intro {
+                padding: 1.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>All-in-One</h1>
+        <button class="nav-toggle" aria-label="Toggle Navigation">☰</button>
+        <nav>
+            <ul>
+                <li><a href="code.html">💻 Code Generator</a></li>
+                <li><a href="brieflypdf.html">📄 Briefly PDF</a></li>
+                <li><a href="chatmaven.html">🗣️ Chat Maven</a></li>
+                <li><a href="doubtclear.html">❓ Doubt Clear</a></li>
+                <li><a href="math.html">➗ Maths Problem</a></li>
+                <li><a href="pdfvisionary.html">🔍 PDF Visionary</a></li>
+                <li><a href="queryvista.html">🖼️ Query Vista</a></li>
+                <li><a href="videosummarize.html">🎥 Video Summarize</a></li>
+                <li><a href="vidsage.html">🎓 Vid Sage</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h2>Welcome to Our All-in-One Education Tool 🌟</h2>
+            <p>Our platform provides a suite of tools designed to support educators, students, and lifelong learners.
+                Each tool offers unique capabilities to enhance your educational experience. Explore the features below
+                to discover how our services can benefit you.</p>
+        </section>
+        <section class="features">
+            <div class="feature">
+                <h3>Code Generator</h3>
+                <p>Generate code snippets for various programming languages. Ideal for learners and developers needing
+                    quick code examples or solutions.</p>
+            </div>
+            <div class="feature">
+                <h3>Briefly PDF</h3>
+                <p>Upload multiple PDFs for processing. Extract and analyze text, and get detailed answers about the
+                    content of your documents.</p>
+            </div>
+            <div class="feature">
+                <h3>Chat Maven</h3>
+                <p>Engage with our AI chatbot to get answers and support on a wide range of topics. Perfect for quick
+                    help and interactive learning.</p>
+            </div>
+            <div class="feature">
+                <h3>Doubt Clear</h3>
+                <p>Upload images to get answers about their content. Ideal for resolving doubts related to visual
+                    material quickly and accurately.</p>
+            </div>
+            <div class="feature">
+                <h3>Math Assistance</h3>
+                <p>Submit images of math problems to get explanations and solutions. Designed to assist with
+                    understanding and solving mathematical queries.</p>
+            </div>
+            <div class="feature">
+                <h3>PDF Visionary</h3>
+                <p>Upload a single PDF to get detailed insights. Ask questions about the content, and get precise
+                    answers tailored to your needs.</p>
+            </div>
+            <div class="feature">
+                <h3>Query Vista</h3>
+                <p>Upload multiple images and ask questions about their content. Receive detailed answers based on the
+                    images you provide.</p>
+            </div>
+            <div class="feature">
+                <h3>Video Summarize</h3>
+                <p>Provide a YouTube link and get a summary of the video content. Tailor your request with prompts to
+                    receive detailed summaries and insights.</p>
+            </div>
+            <div class="feature">
+                <h3>Vid Sage</h3>
+                <p>Upload videos to get detailed information about their content. Useful for understanding and analyzing
+                    video material effectively.</p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 All-in-One | All Rights Reserved 🚀🎓</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navMenu = document.querySelector('nav ul');
+
+            navToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

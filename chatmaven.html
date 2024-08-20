@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatMaven</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 95%;
+        }
+
+        .chat-header {
+            background: #007BFF;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            border-bottom: 2px solid #0056b3;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            max-width: 80%;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            color: white;
+            border-radius: 15px;
+            padding: 10px 15px;
+            word-wrap: break-word;
+            text-align: left;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            color: #333;
+            border-radius: 15px;
+            word-wrap: break-word;
+            text-align: left;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .message p {
+            margin: 0;
+            word-wrap: break-word;
+            font-size: 1em;
+            padding: 10px 15px;
+            border-radius: 15px;
+        }
+
+        .message.user p {
+            color: black;
+            background-color: #ddd;
+            border-bottom-right-radius: 0;
+        }
+
+        .message.bot p {
+            color: #333;
+            border-bottom-left-radius: 0;
+        }
+
+        .chat-footer {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background: #fff;
+            border-top: 2px solid #ddd;
+        }
+
+        #chat-form {
+            display: flex;
+            width: 100%;
+            align-items: center;
+        }
+
+        #user_input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #user_input:focus {
+            border-color: #007BFF;
+        }
+
+        button[type="submit"] {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            outline: none;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        button[type="submit"] svg {
+            fill: white;
+        }
+
+        .message-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .message-buttons button {
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .message-buttons .audio-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="chat-header">ChatMaven</div>
+        <div class="chat-box" id="chat-box"></div>
+
+        <div class="chat-footer">
+            <form id="chat-form">
+                <input type="text" id="user_input" name="user_input" placeholder="Type your message here..." required>
+                <button type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M2.01 21l21-9-21-9-.01 8 15 1-15 1z" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+    </div>
+    <script>
+        document.getElementById('chat-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const userInputElement = document.getElementById('user_input');
+            const userInput = userInputElement.value.trim();
+            const chatBox = document.getElementById('chat-box');
+
+            if (userInput === '') {
+                return;
+            }
+
+            userInputElement.value = '';
+
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('message', 'user');
+            userMessage.innerHTML = `<p>${escapeHtml(userInput)}</p>`;
+            chatBox.appendChild(userMessage);
+            addMessageButtons(userMessage, userInput);
+
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.classList.add('message', 'bot');
+            loadingIndicator.innerHTML = `<p>Loading...</p>`;
+            chatBox.appendChild(loadingIndicator);
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            fetch('https://all-in-one-zytf.onrender.com/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({ user_input: userInput })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.user_input && data.bot_response) {
+                        chatBox.removeChild(loadingIndicator);
+
+                        const botMessage = document.createElement('div');
+                        botMessage.classList.add('message', 'bot');
+                        botMessage.innerHTML = data.bot_response;
+                        chatBox.appendChild(botMessage);
+                        addMessageButtons(botMessage, data.bot_response);
+
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    chatBox.removeChild(loadingIndicator);
+                });
+        });
+
+        function addMessageButtons(messageElement, messageText) {
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('message-buttons');
+
+            const copyButton = document.createElement('button');
+            copyButton.innerText = '📋';
+            copyButton.classList.add('copy-button');
+            copyButton.addEventListener('click', () => {
+                navigator.clipboard.writeText(messageText).then(() => {
+                    alert('Message copied to clipboard');
+                });
+            });
+            buttonContainer.appendChild(copyButton);
+
+            const audioButton = document.createElement('button');
+            audioButton.innerText = '🔊';
+            audioButton.classList.add('audio-button');
+            let utterance = null;
+
+            audioButton.addEventListener('click', () => {
+                if (!utterance) {
+                    utterance = new SpeechSynthesisUtterance(messageText);
+                    window.speechSynthesis.speak(utterance);
+                    audioButton.innerText = '⏸️';
+
+                    utterance.onend = () => {
+                        audioButton.innerText = '🔊';
+                        utterance = null;
+                    };
+                } else {
+                    window.speechSynthesis.cancel();
+                    audioButton.innerText = '🔊';
+                    utterance = null;
+                }
+            });
+            buttonContainer.appendChild(audioButton);
+
+            messageElement.appendChild(buttonContainer);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+    </script>
+</body>
+
+</html>
