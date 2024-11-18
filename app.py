@@ -21,8 +21,8 @@ logging.basicConfig(level=logging.DEBUG)
 CORS(app)
 app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
 genai.configure(api_key=os.environ['API_KEY'])
-API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyBc9a2I57vkHjVYhJ42QkzMxZvwq0BY44k"
-API_KEY = "AIzaSyBPgXeivnFmtX6-PSu3XudU0-EraotrYf4"
+API_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=API_Key"
+API_KEY = "API_Key"
 model = genai.GenerativeModel('gemini-1.5-flash')
 chat = model.start_chat(history=[])
 
